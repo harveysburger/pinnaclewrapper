@@ -28,4 +28,6 @@ Example (continuing from above):
     Thread.Sleep(5000);    // wait 5 seconds between calls!
     var newFeed = client.GetFeed(12, leagues.Select(x => x.Id).ToArray(), feed.Timestamp);
 
+A future release will monitor lines for changes and fire an event when it updates.
+	
 Enjoy!
