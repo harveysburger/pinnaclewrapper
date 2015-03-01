@@ -38,7 +38,8 @@ namespace PinnacleWrapper
             // put auth header into httpclient
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                     Convert.ToBase64String(
-                        Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _clientId, _password))));
+                        Encoding.ASCII.GetBytes(string.Format("{0}:{1}", 
+                        , _password))));
         }
 
         protected T GetXmlAsync<T>(string requestType, params object[] values)
@@ -115,16 +116,6 @@ namespace PinnacleWrapper
 
         protected Feed GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, int isLive)
         {
-            if (string.IsNullOrWhiteSpace(_clientId))
-            {
-                throw new Exception("Client ID is mandatory when requesting feeds");
-            }
-
-            if (string.IsNullOrWhiteSpace(_password))
-            {
-                throw new Exception("Password is mandatory when requesting feeds");
-            }
-
             if (!IsFairFeedRequest(lastTimestamp))
                 throw new Exception(
                     string.Format(
