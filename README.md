@@ -4,6 +4,13 @@ A complete API client that builds on the <a href="http://www.pinnaclesports.com/
 
 I have cleaned up and extended the wrapper created by <a href="http://www.broculos.net/2014/04/pinnacle-sports-how-to-implement-rest.html">Nuno Freitas</a> to support the JSON functions (GetClientBalance, PlaceBet, GetLine, GetBets, GetInRunning).
 
+<strong>References:</strong>
+
+These references are available via NuGet.
+
+    Newtonsoft.Json 
+	System.Net.Http.Formatting (part of the Microsoft.AspNet.WebApi.Client package)
+
 <strong>Usage:</strong>
 
 Here's an example of getting all lines for upcoming E-Sports matches (across all E-Sports leagues):
