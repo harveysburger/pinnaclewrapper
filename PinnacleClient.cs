@@ -6,6 +6,8 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using PinnacleWrapper.Data;
+using PinnacleWrapper.Enums;
 
 namespace PinnacleWrapper
 {
@@ -38,8 +40,7 @@ namespace PinnacleWrapper
             // put auth header into httpclient
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                     Convert.ToBase64String(
-                        Encoding.ASCII.GetBytes(string.Format("{0}:{1}", 
-                        , _password))));
+                        Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _clientId, _password))));
         }
 
         protected T GetXmlAsync<T>(string requestType, params object[] values)
@@ -161,7 +162,7 @@ namespace PinnacleWrapper
 
         #endregion
 
-        protected T GetJsonAsync<T>(string requestType, params object[] values)
+        protected async Task<T> GetJsonAsync<T>(string requestType, params object[] values)
         {
             var response = _httpClient.GetAsync(string.Format(requestType, values)).Result;
 
@@ -170,31 +171,31 @@ namespace PinnacleWrapper
             var json = response.Content.ReadAsStringAsync().Result;
 
             // deserialise json async
-            var apiResponse = Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json)).Result;
+            var apiResponse = Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
 
-            return apiResponse;
+            return await apiResponse;
         }
 
         // ToDo: replace requestData object type with "IJsonSerialisable"
-        protected T PostJsonAsync<T>(string requestType, object requestData)
+        protected async Task<T> PostJsonAsync<T>(string requestType, object requestData)
         {
             var requestPostData = JsonConvert.SerializeObject(requestData);
 
-            var response = _httpClient.PostAsync(requestType,
-                new StringContent(requestPostData, Encoding.UTF8, "application/json")).Result;
+            var response = await _httpClient.PostAsync(requestType,
+                new StringContent(requestPostData, Encoding.UTF8, "application/json"));
 
             response.EnsureSuccessStatusCode();         // throw if web request failed
 
-            var json = response.Content.ReadAsStringAsync().Result;
+            var json = await response.Content.ReadAsStringAsync();
 
             // deserialise async
-            return Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json)).Result;
+            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
         }
 
         public ClientBalance GetClientBalance()
         {
             const string uri = "client/balance";
-            return GetJsonAsync<ClientBalance>(uri);
+            return GetJsonAsync<ClientBalance>(uri).Result;
         }
 
         public GetBetsResponse GetBets(BetListType type, DateTime startDate, DateTime endDate)
@@ -207,7 +208,7 @@ namespace PinnacleWrapper
 
             var uri = sb.ToString();
 
-            return GetJsonAsync<GetBetsResponse>(uri);
+            return GetJsonAsync<GetBetsResponse>(uri).Result;
         }
 
         public GetBetsResponse GetBets(List<int> betIds)
@@ -219,12 +220,12 @@ namespace PinnacleWrapper
 
             var uri = sb.ToString();
 
-            return GetJsonAsync<GetBetsResponse>(uri);
+            return GetJsonAsync<GetBetsResponse>(uri).Result;
         }
 
         public PlaceBetResponse PlaceBet(PlaceBetRequest placeBetRequest)
         {
-            return PostJsonAsync<PlaceBetResponse>("bets/place", placeBetRequest);
+            return PostJsonAsync<PlaceBetResponse>("bets/place", placeBetRequest).Result;
         }
 
         /// <summary>
@@ -281,13 +282,13 @@ namespace PinnacleWrapper
 
             var uri = sb.ToString();
 
-            return GetJsonAsync<GetLineResponse>(uri);
+            return GetJsonAsync<GetLineResponse>(uri).Result;
         }
 
         public GetInRunningResponse GetInRunning()
         {
             const string uri = "inrunning";
-            return GetJsonAsync<GetInRunningResponse>(uri);
+            return GetJsonAsync<GetInRunningResponse>(uri).Result;
         }
     }
 }
