@@ -82,7 +82,8 @@ namespace PinnacleWrapper
         {
             var sb = new StringBuilder();
             sb.AppendFormat("feed?sportid={0}", sportId);
-            sb.AppendFormat("&leagueid={0}", string.Join("-", leagueId));
+            if (leagueId.Length > 0)
+                sb.AppendFormat("&leagueid={0}", string.Join("-", leagueId));
             sb.AppendFormat("&oddsformat={0}", (int)format);
             sb.AppendFormat("&currencycode={0}", currency);
 
@@ -128,6 +129,11 @@ namespace PinnacleWrapper
             var uri = GetFeedRequestUri(sportId, leagueIds, format, currency, lastTimestamp, isLive);
 
             return GetXmlAsync<FeedResponse>(uri).Feed;
+        }
+
+        public Feed GetFeed(int sportId)
+        {
+            return GetFeed(sportId, new int[]{}, OddsFormat, CurrencyCode, -1, -1);
         }
 
         public Feed GetFeed(int sportId, int[] leagueIds)

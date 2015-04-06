@@ -8,6 +8,6 @@ namespace PinnacleWrapper.Enums
     {
         Accepted,
         PendingAcceptance,      // live bets in the danger zone
-        ProcessedWithError
+        PROCESSED_WITH_ERROR
     }
 }

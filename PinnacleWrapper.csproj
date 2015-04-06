@@ -55,8 +55,6 @@
     <Compile Include="Data\ClientBalance.cs" />
     <Compile Include="Data\Currency.cs" />
     <Compile Include="Data\Event.cs" />
-    <Compile Include="Data\Feed.cs" />
-    <Compile Include="Data\FeedLeague.cs" />
     <Compile Include="Data\FeedSport.cs" />
     <Compile Include="Data\GetBetsResponse.cs" />
     <Compile Include="Data\GetInRunningResponse.cs" />
@@ -67,6 +65,8 @@
     <Compile Include="Data\MoneyLine.cs" />
     <Compile Include="Enums\OddsFormat.cs" />
     <Compile Include="Data\Period.cs" />
+    <Compile Include="Data\Feed.cs" />
+    <Compile Include="Data\FeedLeague.cs" />
     <Compile Include="PinnacleClient.cs" />
     <Compile Include="Enums\PlaceBetErrorCode.cs" />
     <Compile Include="Data\PlaceBetRequest.cs" />

@@ -22,7 +22,7 @@ namespace PinnacleWrapper.Data
         public decimal Risk;
 
         [JsonProperty(PropertyName = "winLoss")]
-        public decimal WinLoss;
+        public decimal? WinLoss;
 
         [JsonProperty(PropertyName = "betStatus")]
         public BetStatus BetStatus;
@@ -85,10 +85,10 @@ namespace PinnacleWrapper.Data
         public decimal? Team2Score;
 
         [JsonProperty(PropertyName = "ftTeam1Score")]
-        public decimal FullTimeTeam1Score;
+        public decimal? FullTimeTeam1Score;
 
         [JsonProperty(PropertyName = "ftTeam2Score")]
-        public decimal FullTimeTeam2Score;
+        public decimal? FullTimeTeam2Score;
 
         [JsonProperty(PropertyName = "pTeam1Score")]
         public decimal? PartTimeTeam1Score;
