@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="Data\Bet.cs" />
     <Compile Include="Data\BetAmount.cs" />
+    <Compile Include="Data\TeamTotalPoints.cs" />
+    <Compile Include="Data\TotalPoints.cs" />
     <Compile Include="Enums\BetListType.cs" />
     <Compile Include="Enums\BetStatus.cs" />
     <Compile Include="Enums\BetType.cs" />

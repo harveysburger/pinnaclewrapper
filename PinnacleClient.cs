@@ -48,9 +48,12 @@ namespace PinnacleWrapper
         {
             var response = _httpClient.GetAsync(string.Format(requestType, values)).Result;
 
+            var str = _httpClient.GetStringAsync(string.Format(requestType, values)).Result;
+
             response.EnsureSuccessStatusCode();         // throw if web request failed
 
             var xmlFormatter = new XmlMediaTypeFormatter { UseXmlSerializer = true };
+
             var apiResponse = response.Content.ReadAsAsync<T>(new[] { xmlFormatter }).Result;
 
             if (apiResponse.IsValid)
@@ -136,6 +139,11 @@ namespace PinnacleWrapper
             return GetFeed(sportId, new int[]{}, OddsFormat, CurrencyCode, -1, -1);
         }
 
+        public Feed GetFeed(int sportId, long lastTimestamp)
+        {
+            return GetFeed(sportId, new int[] { }, OddsFormat, CurrencyCode, lastTimestamp);
+        }
+
         public Feed GetFeed(int sportId, int[] leagueIds)
         {
             return GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, -1, -1);
@@ -174,12 +182,10 @@ namespace PinnacleWrapper
 
             response.EnsureSuccessStatusCode();         // throw if web request failed
 
-            var json = response.Content.ReadAsStringAsync().Result;
+            var json = await response.Content.ReadAsStringAsync();
 
             // deserialise json async
-            var apiResponse = Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
-
-            return await apiResponse;
+            return JsonConvert.DeserializeObject<T>(json);
         }
 
         // ToDo: replace requestData object type with "IJsonSerialisable"

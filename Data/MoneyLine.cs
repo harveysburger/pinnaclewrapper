@@ -12,5 +12,8 @@ namespace PinnacleWrapper.Data
 
         [XmlElement("homePrice")]
         public double HomePrice { get; set; }
+
+        [XmlElement("drawPrice")]
+        public double DrawPrice { get; set; }
     }
 }

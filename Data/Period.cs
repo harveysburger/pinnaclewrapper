@@ -27,6 +27,13 @@ namespace PinnacleWrapper.Data
         [XmlElement("moneyLine")]
         public MoneyLine MoneyLine { get; set; }
 
+        [XmlArray("totals")]
+        [XmlArrayItem("total")]
+        public List<TotalPoints> Totals { get; set; }
+
+        //[XmlElement("teamTotals")]
+        //public TeamTotalPoints TeamTotalPoints { get; set; }      // temporarily unused
+
         [XmlElement("maxBetAmount")]
         public BetAmount MaxBetAmount { get; set; }
     }
