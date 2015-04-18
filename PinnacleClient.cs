@@ -48,7 +48,7 @@ namespace PinnacleWrapper
         {
             var response = _httpClient.GetAsync(string.Format(requestType, values)).Result;
 
-            var str = _httpClient.GetStringAsync(string.Format(requestType, values)).Result;
+            //var str = _httpClient.GetStringAsync(string.Format(requestType, values)).Result;
 
             response.EnsureSuccessStatusCode();         // throw if web request failed
 
@@ -178,14 +178,14 @@ namespace PinnacleWrapper
 
         protected async Task<T> GetJsonAsync<T>(string requestType, params object[] values)
         {
-            var response = _httpClient.GetAsync(string.Format(requestType, values)).Result;
+            var response = await _httpClient.GetAsync(string.Format(requestType, values)).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();         // throw if web request failed
 
             var json = await response.Content.ReadAsStringAsync();
 
             // deserialise json async
-            return JsonConvert.DeserializeObject<T>(json);
+            return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
         }
 
         // ToDo: replace requestData object type with "IJsonSerialisable"
@@ -194,7 +194,7 @@ namespace PinnacleWrapper
             var requestPostData = JsonConvert.SerializeObject(requestData);
 
             var response = await _httpClient.PostAsync(requestType,
-                new StringContent(requestPostData, Encoding.UTF8, "application/json"));
+                new StringContent(requestPostData, Encoding.UTF8, "application/json")).ConfigureAwait(false); 
 
             response.EnsureSuccessStatusCode();         // throw if web request failed
 
@@ -204,13 +204,13 @@ namespace PinnacleWrapper
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
         }
 
-        public ClientBalance GetClientBalance()
+        public Task<ClientBalance> GetClientBalance()
         {
             const string uri = "client/balance";
-            return GetJsonAsync<ClientBalance>(uri).Result;
+            return GetJsonAsync<ClientBalance>(uri);
         }
 
-        public GetBetsResponse GetBets(BetListType type, DateTime startDate, DateTime endDate)
+        public Task<GetBetsResponse> GetBets(BetListType type, DateTime startDate, DateTime endDate)
         {
             // get request uri
             var sb = new StringBuilder();
@@ -220,10 +220,10 @@ namespace PinnacleWrapper
 
             var uri = sb.ToString();
 
-            return GetJsonAsync<GetBetsResponse>(uri).Result;
+            return GetJsonAsync<GetBetsResponse>(uri);
         }
 
-        public GetBetsResponse GetBets(List<int> betIds)
+        public Task<GetBetsResponse> GetBets(List<int> betIds)
         {
             // get request uri
             var sb = new StringBuilder();
@@ -232,12 +232,12 @@ namespace PinnacleWrapper
 
             var uri = sb.ToString();
 
-            return GetJsonAsync<GetBetsResponse>(uri).Result;
+            return GetJsonAsync<GetBetsResponse>(uri);
         }
 
-        public PlaceBetResponse PlaceBet(PlaceBetRequest placeBetRequest)
+        public Task<PlaceBetResponse> PlaceBet(PlaceBetRequest placeBetRequest)
         {
-            return PostJsonAsync<PlaceBetResponse>("bets/place", placeBetRequest).Result;
+            return PostJsonAsync<PlaceBetResponse>("bets/place", placeBetRequest);
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace PinnacleWrapper
         /// <param name="side"></param>
         /// <param name="handicap"></param>
         /// <returns></returns>
-        public GetLineResponse GetLine(int sportId, int leagueId, long eventId, int periodNumber, BetType betType, OddsFormat oddsFormat,
+        public Task<GetLineResponse> GetLine(int sportId, int leagueId, long eventId, int periodNumber, BetType betType, OddsFormat oddsFormat,
             TeamType? team = null, SideType? side = null, decimal? handicap = null)
         {
             if (team == null)
@@ -294,13 +294,13 @@ namespace PinnacleWrapper
 
             var uri = sb.ToString();
 
-            return GetJsonAsync<GetLineResponse>(uri).Result;
+            return GetJsonAsync<GetLineResponse>(uri);
         }
 
-        public GetInRunningResponse GetInRunning()
+        public Task<GetInRunningResponse> GetInRunning()
         {
             const string uri = "inrunning";
-            return GetJsonAsync<GetInRunningResponse>(uri).Result;
+            return GetJsonAsync<GetInRunningResponse>(uri);
         }
     }
 }

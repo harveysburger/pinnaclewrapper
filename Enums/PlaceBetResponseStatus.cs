@@ -6,8 +6,8 @@ namespace PinnacleWrapper.Enums
     [JsonConverter(typeof(StringEnumConverter))]
     public enum PlaceBetResponseStatus
     {
-        Accepted,
-        PendingAcceptance,      // live bets in the danger zone
+        ACCEPTED,
+        PENDING_ACCEPTANCE,      // live bets in the danger zone
         PROCESSED_WITH_ERROR
     }
 }
