@@ -43,10 +43,10 @@ namespace PinnacleWrapper
                         Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _clientId, _password))));
         }
 
-        protected T GetXmlAsync<T>(string requestType, params object[] values)
+        protected async Task<T> GetXmlAsync<T>(string requestType, params object[] values)
             where T : XmlResponse
         {
-            var response = _httpClient.GetAsync(string.Format(requestType, values)).Result;
+            var response = await _httpClient.GetAsync(string.Format(requestType, values)).ConfigureAwait(false);
 
             //var str = _httpClient.GetStringAsync(string.Format(requestType, values)).Result;
 
@@ -54,7 +54,7 @@ namespace PinnacleWrapper
 
             var xmlFormatter = new XmlMediaTypeFormatter { UseXmlSerializer = true };
 
-            var apiResponse = response.Content.ReadAsAsync<T>(new[] { xmlFormatter }).Result;
+            var apiResponse = await response.Content.ReadAsAsync<T>(new[] {xmlFormatter});
 
             if (apiResponse.IsValid)
             {
@@ -64,19 +64,19 @@ namespace PinnacleWrapper
             throw new Exception("Pinnacle Sports API error: " + apiResponse.Error.Message);
         }
 
-        public List<Sport> GetSports()
+        public async Task<List<Sport>> GetSports()
         {
-            return GetXmlAsync<SportsResponse>("sports").Sports;
+            return (await GetXmlAsync<SportsResponse>("sports")).Sports;
         }
 
-        public List<League> GetLeagues(int sportId)
+        public async Task<List<League>> GetLeagues(int sportId)
         {
-            return GetXmlAsync<LeaguesResponse>("leagues?sportid={0}", sportId).Leagues;
+            return (await GetXmlAsync<LeaguesResponse>("leagues?sportid={0}", sportId)).Leagues;
         }
 
-        public List<Currency> GetCurrencies()
+        public async Task<List<Currency>> GetCurrencies()
         {
-            return GetXmlAsync<CurrenciesResponse>("currencies").Currencies;
+            return (await GetXmlAsync<CurrenciesResponse>("currencies")).Currencies;
         }
         
         #region GetFeed
@@ -119,59 +119,59 @@ namespace PinnacleWrapper
             return true;
         }
 
-        protected Feed GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, int isLive)
+        protected async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, int isLive)
         {
-            if (!IsFairFeedRequest(lastTimestamp))
-                throw new Exception(
-                    string.Format(
-                        "Too many feed requests. Minimum interval time between request is {0} seconds or {1} seconds when specifying the last parameter",
-                        MinimumFeedRefresh,
-                        MinimumFeedRefreshWithLast));
+            //if (!IsFairFeedRequest(lastTimestamp))
+            //    throw new Exception(
+            //        string.Format(
+            //            "Too many feed requests. Minimum interval time between request is {0} seconds or {1} seconds when specifying the last parameter",
+            //            MinimumFeedRefresh,
+            //            MinimumFeedRefreshWithLast));
 
             _lastFeedRequest = DateTime.Now;
             var uri = GetFeedRequestUri(sportId, leagueIds, format, currency, lastTimestamp, isLive);
 
-            return GetXmlAsync<FeedResponse>(uri).Feed;
+            return (await GetXmlAsync<FeedResponse>(uri)).Feed;
         }
 
-        public Feed GetFeed(int sportId)
+        public async Task<Feed> GetFeed(int sportId)
         {
-            return GetFeed(sportId, new int[]{}, OddsFormat, CurrencyCode, -1, -1);
+            return await GetFeed(sportId, new int[]{}, OddsFormat, CurrencyCode, -1, -1);
         }
 
-        public Feed GetFeed(int sportId, long lastTimestamp)
+        public async Task<Feed> GetFeed(int sportId, long lastTimestamp)
         {
-            return GetFeed(sportId, new int[] { }, OddsFormat, CurrencyCode, lastTimestamp);
+            return await GetFeed(sportId, new int[] { }, OddsFormat, CurrencyCode, lastTimestamp);
         }
 
-        public Feed GetFeed(int sportId, int[] leagueIds)
+        public async Task<Feed> GetFeed(int sportId, int[] leagueIds)
         {
-            return GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, -1, -1);
+            return await GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, -1, -1);
         }
 
-        public Feed GetFeed(int sportId, int[] leagueIds, long lastTimestamp)
+        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, long lastTimestamp)
         {
-            return GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, lastTimestamp, -1);
+            return await GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, lastTimestamp, -1);
         }
 
-        public Feed GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency)
+        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency)
         {
-            return GetFeed(sportId, leagueIds, format, currency, -1, -1);
+            return await GetFeed(sportId, leagueIds, format, currency, -1, -1);
         }
 
-        public Feed GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, bool isLive)
+        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, bool isLive)
         {
-            return GetFeed(sportId, leagueIds, format, currency, -1, isLive ? 1 : 0);
+            return await GetFeed(sportId, leagueIds, format, currency, -1, isLive ? 1 : 0);
         }
 
-        public Feed GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp)
+        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp)
         {
-            return GetFeed(sportId, leagueIds, format, currency, lastTimestamp, -1);
+            return await GetFeed(sportId, leagueIds, format, currency, lastTimestamp, -1);
         }
 
-        public Feed GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, bool isLive)
+        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, bool isLive)
         {
-            return GetFeed(sportId, leagueIds, format, currency, lastTimestamp, isLive ? 1 : 0);
+            return await GetFeed(sportId, leagueIds, format, currency, lastTimestamp, isLive ? 1 : 0);
         }
 
         #endregion
