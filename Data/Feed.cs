@@ -7,6 +7,7 @@ namespace PinnacleWrapper
 {
     [Serializable]
     [XmlRoot("fd")]
+    [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
     public class Feed
     {
         [XmlElement("fdTime")]

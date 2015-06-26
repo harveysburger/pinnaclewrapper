@@ -49,8 +49,19 @@
   <ItemGroup>
     <Compile Include="Data\Bet.cs" />
     <Compile Include="Data\BetAmount.cs" />
+    <Compile Include="Data\GetFixturesResponse.cs" />
+    <Compile Include="Data\GetFixturesRequest.cs" />
+    <Compile Include="Data\GetOddsEvent.cs" />
+    <Compile Include="Data\GetOddsLeague.cs" />
+    <Compile Include="Data\GetOddsRequest.cs" />
+    <Compile Include="Data\GetOddsResponse.cs" />
+    <Compile Include="Data\MoneyLineType.cs" />
+    <Compile Include="Data\PeriodType.cs" />
+    <Compile Include="Data\SpreadType.cs" />
     <Compile Include="Data\TeamTotalPoints.cs" />
+    <Compile Include="Data\TeamTotalPointsType.cs" />
     <Compile Include="Data\TotalPoints.cs" />
+    <Compile Include="Data\TotalPointsType.cs" />
     <Compile Include="Enums\BetListType.cs" />
     <Compile Include="Enums\BetStatus.cs" />
     <Compile Include="Enums\BetType.cs" />
@@ -61,14 +72,17 @@
     <Compile Include="Data\GetBetsResponse.cs" />
     <Compile Include="Data\GetInRunningResponse.cs" />
     <Compile Include="Data\GetLineResponse.cs" />
+    <Compile Include="Enums\EventStatus.cs" />
     <Compile Include="Enums\GetLineResponseStatus.cs" />
     <Compile Include="Enums\InRunningState.cs" />
     <Compile Include="Data\League.cs" />
     <Compile Include="Data\MoneyLine.cs" />
+    <Compile Include="Enums\LiveStatus.cs" />
     <Compile Include="Enums\OddsFormat.cs" />
     <Compile Include="Data\Period.cs" />
     <Compile Include="Data\Feed.cs" />
     <Compile Include="Data\FeedLeague.cs" />
+    <Compile Include="Enums\ParlayRestriction.cs" />
     <Compile Include="PinnacleClient.cs" />
     <Compile Include="Enums\PlaceBetErrorCode.cs" />
     <Compile Include="Data\PlaceBetRequest.cs" />

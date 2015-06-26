@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using PinnacleWrapper.Data;
 
-namespace PinnacleWrapper
+namespace PinnacleWrapper.Data
 {
     [Serializable]
     [XmlRoot("league")]
+    [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
     public class FeedLeague
     {
         [XmlElement("id")]

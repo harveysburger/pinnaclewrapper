@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
@@ -119,6 +120,7 @@ namespace PinnacleWrapper
             return true;
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         protected async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, int isLive)
         {
             //if (!IsFairFeedRequest(lastTimestamp))
@@ -134,41 +136,49 @@ namespace PinnacleWrapper
             return (await GetXmlAsync<FeedResponse>(uri)).Feed;
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         public async Task<Feed> GetFeed(int sportId)
         {
             return await GetFeed(sportId, new int[]{}, OddsFormat, CurrencyCode, -1, -1);
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         public async Task<Feed> GetFeed(int sportId, long lastTimestamp)
         {
             return await GetFeed(sportId, new int[] { }, OddsFormat, CurrencyCode, lastTimestamp);
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         public async Task<Feed> GetFeed(int sportId, int[] leagueIds)
         {
             return await GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, -1, -1);
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         public async Task<Feed> GetFeed(int sportId, int[] leagueIds, long lastTimestamp)
         {
             return await GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, lastTimestamp, -1);
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency)
         {
             return await GetFeed(sportId, leagueIds, format, currency, -1, -1);
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, bool isLive)
         {
             return await GetFeed(sportId, leagueIds, format, currency, -1, isLive ? 1 : 0);
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp)
         {
             return await GetFeed(sportId, leagueIds, format, currency, lastTimestamp, -1);
         }
 
+        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
         public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, bool isLive)
         {
             return await GetFeed(sportId, leagueIds, format, currency, lastTimestamp, isLive ? 1 : 0);
@@ -301,6 +311,46 @@ namespace PinnacleWrapper
         {
             const string uri = "inrunning";
             return GetJsonAsync<GetInRunningResponse>(uri);
+        }
+
+        public Task<GetFixturesResponse> GetFixtures(GetFixturesRequest request)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendFormat("fixtures?sportId={0}", request.SportId);
+
+            if (request.LeagueIds != null && request.LeagueIds.Any())
+                sb.AppendFormat("&leagueIds={0}", string.Join(",", request.LeagueIds));
+
+            if (request.Since > 0)
+                sb.AppendFormat("&since={0}", request.Since);
+
+            if (request.IsLive)
+                sb.AppendFormat("&IsLive={0}", 1);
+
+
+            return GetJsonAsync<GetFixturesResponse>(sb.ToString());
+        }
+
+        public Task<GetOddsResponse> GetOdds(GetOddsRequest request)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendFormat("odds?sportId={0}", request.SportId);
+
+            if (request.LeagueIds != null && request.LeagueIds.Any())
+                sb.AppendFormat("&leagueIds={0}", string.Join(",", request.LeagueIds));
+
+            if (request.Since > 0)
+                sb.AppendFormat("&since={0}", request.Since);
+
+            if (request.IsLive)
+                sb.AppendFormat("&IsLive={0}", 1);
+
+            sb.AppendFormat("&oddsFormat={0}", OddsFormat);
+            sb.AppendFormat("&currencycode={0}", CurrencyCode);
+
+            return GetJsonAsync<GetOddsResponse>(sb.ToString());
         }
     }
 }
