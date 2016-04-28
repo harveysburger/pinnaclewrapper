@@ -1,15 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 
 namespace PinnacleWrapper.Data
 {
-    [Serializable]
-    [XmlRoot("rsp")]
-    public class LeaguesResponse : XmlResponse
+    public class LeaguesResponse
     {
-        [XmlArray("leagues")]
-        [XmlArrayItem("league")]
-        public List<League> Leagues { get; set; }
+        [JsonProperty(PropertyName = "leagues")]
+        public List<League> Leagues;
     }
 }
