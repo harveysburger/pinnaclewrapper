@@ -1,16 +1,16 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace PinnacleWrapper.Data
 {
-    [Serializable]
-    [XmlRoot("currency")]
     public class Currency
     {
-        [XmlAttribute("code")]
-        public string Code { get; set; }
+        [JsonProperty(PropertyName = "code")]
+        public string Code;
 
-        [XmlText]
-        public string Name { get; set; }
+        [JsonProperty(PropertyName = "name")]
+        public string Name;
+
+        [JsonProperty(PropertyName = "rate")]
+        public decimal rate;
     }
 }

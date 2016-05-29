@@ -1,19 +1,16 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace PinnacleWrapper.Data
 {
-    [Serializable]
-    [XmlRoot("sport")]
     public class Sport
     {
-        [XmlAttribute("id")]
-        public int Id { get; set; }
+        [JsonProperty(PropertyName = "id")]
+        public int Id;
 
-        [XmlAttribute("feedContents")]
-        public int FeedContents { get; set; }
+        [JsonProperty(PropertyName = "name")]
+        public string Name;
 
-        [XmlText]
-        public string Title { get; set; }
+        [JsonProperty(PropertyName = "hasOfferings")]
+        public bool HasOfferings;
     }
 }

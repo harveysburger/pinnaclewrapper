@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Formatting;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PinnacleWrapper.Data;
 using PinnacleWrapper.Enums;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Formatting;
 
 namespace PinnacleWrapper
 {
@@ -27,7 +27,7 @@ namespace PinnacleWrapper
 
         private DateTime? _lastFeedRequest;
 
-        private const string BaseAddress = "https://api.pinnaclesports.com/v1/";
+        private const string BaseAddress = "https://api.pinnaclesports.com/";
 
         public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat)
         {
@@ -67,17 +67,17 @@ namespace PinnacleWrapper
 
         public async Task<List<Sport>> GetSports()
         {
-            return (await GetXmlAsync<SportsResponse>("sports")).Sports;
+            return (await GetJsonAsync<SportsResponse>("v2/sports")).Sports;
         }
 
         public async Task<List<League>> GetLeagues(int sportId)
         {
-            return (await GetXmlAsync<LeaguesResponse>("leagues?sportid={0}", sportId)).Leagues;
+            return (await GetJsonAsync<LeaguesResponse>("v2/leagues?sportid={0}", sportId)).Leagues;
         }
 
         public async Task<List<Currency>> GetCurrencies()
         {
-            return (await GetXmlAsync<CurrenciesResponse>("currencies")).Currencies;
+            return (await GetJsonAsync<CurrenciesResponse>("v2/currencies")).Currencies;
         }
         
         #region GetFeed
@@ -216,7 +216,7 @@ namespace PinnacleWrapper
 
         public Task<ClientBalance> GetClientBalance()
         {
-            const string uri = "client/balance";
+            const string uri = "v1/client/balance";
             return GetJsonAsync<ClientBalance>(uri);
         }
 
@@ -224,7 +224,7 @@ namespace PinnacleWrapper
         {
             // get request uri
             var sb = new StringBuilder();
-            sb.AppendFormat("bets?betlist={0}", type.ToString().ToLower());
+            sb.AppendFormat("v1/bets?betlist={0}", type.ToString().ToLower());
             sb.AppendFormat("&fromDate={0}", startDate.ToString("yyyy-MM-dd"));
             sb.AppendFormat("&toDate={0}", endDate.ToString("yyyy-MM-dd"));
 
@@ -238,7 +238,7 @@ namespace PinnacleWrapper
             // get request uri
             var sb = new StringBuilder();
 
-            sb.AppendFormat("bets?betids={0}", string.Join(",", betIds));
+            sb.AppendFormat("v1/bets?betids={0}", string.Join(",", betIds));
 
             var uri = sb.ToString();
 
@@ -247,7 +247,7 @@ namespace PinnacleWrapper
 
         public Task<PlaceBetResponse> PlaceBet(PlaceBetRequest placeBetRequest)
         {
-            return PostJsonAsync<PlaceBetResponse>("bets/place", placeBetRequest);
+            return PostJsonAsync<PlaceBetResponse>("v1/bets/place", placeBetRequest);
         }
 
         /// <summary>
@@ -286,7 +286,7 @@ namespace PinnacleWrapper
 
             // get request uri
             var sb = new StringBuilder();
-            sb.AppendFormat("line?sportId={0}", sportId);
+            sb.AppendFormat("v1/line?sportId={0}", sportId);
             sb.AppendFormat("&leagueId={0}", leagueId);
             sb.AppendFormat("&eventId={0}", eventId);
             sb.AppendFormat("&betType={0}", betType.ToString().ToUpper());
@@ -309,7 +309,7 @@ namespace PinnacleWrapper
 
         public Task<GetInRunningResponse> GetInRunning()
         {
-            const string uri = "inrunning";
+            const string uri = "v1/inrunning";
             return GetJsonAsync<GetInRunningResponse>(uri);
         }
 
@@ -317,7 +317,7 @@ namespace PinnacleWrapper
         {
             var sb = new StringBuilder();
 
-            sb.AppendFormat("fixtures?sportId={0}", request.SportId);
+            sb.AppendFormat("v1/fixtures?sportId={0}", request.SportId);
 
             if (request.LeagueIds != null && request.LeagueIds.Any())
                 sb.AppendFormat("&leagueIds={0}", string.Join(",", request.LeagueIds));
@@ -336,7 +336,7 @@ namespace PinnacleWrapper
         {
             var sb = new StringBuilder();
 
-            sb.AppendFormat("odds?sportId={0}", request.SportId);
+            sb.AppendFormat("v1/odds?sportId={0}", request.SportId);
 
             if (request.LeagueIds != null && request.LeagueIds.Any())
                 sb.AppendFormat("&leagueIds={0}", string.Join(",", request.LeagueIds));
