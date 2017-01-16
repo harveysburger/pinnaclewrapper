@@ -9,6 +9,7 @@ using PinnacleWrapper.Enums;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Formatting;
+using PinnacleWrapper.Exceptions;
 
 namespace PinnacleWrapper
 {
@@ -29,15 +30,17 @@ namespace PinnacleWrapper
 
         private const string BaseAddress = "https://api.pinnaclesports.com/";
 
-        public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat)
+        public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat, HttpClientHandler httpClientHandler = null)
         {
             _clientId = clientId;
             _password = password;
             CurrencyCode = currencyCode;
             OddsFormat = oddsFormat;
 
-            _httpClient = new HttpClient {BaseAddress = new Uri(BaseAddress)};
-            
+            _httpClient = new HttpClient(httpClientHandler ?? new HttpClientHandler()) {
+                BaseAddress = new Uri(BaseAddress)
+            };
+
             // put auth header into httpclient
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
                     Convert.ToBase64String(
@@ -51,7 +54,7 @@ namespace PinnacleWrapper
 
             //var str = _httpClient.GetStringAsync(string.Format(requestType, values)).Result;
 
-            response.EnsureSuccessStatusCode();         // throw if web request failed
+            response.EnsureSuccessStatusCodeCustom();         // throw if web request failed
 
             var xmlFormatter = new XmlMediaTypeFormatter { UseXmlSerializer = true };
 
@@ -190,7 +193,7 @@ namespace PinnacleWrapper
         {
             var response = await _httpClient.GetAsync(string.Format(requestType, values)).ConfigureAwait(false);
 
-            response.EnsureSuccessStatusCode();         // throw if web request failed
+            response.EnsureSuccessStatusCodeCustom();         // throw if web request failed
 
             var json = await response.Content.ReadAsStringAsync();
 
@@ -206,7 +209,7 @@ namespace PinnacleWrapper
             var response = await _httpClient.PostAsync(requestType,
                 new StringContent(requestPostData, Encoding.UTF8, "application/json")).ConfigureAwait(false); 
 
-            response.EnsureSuccessStatusCode();         // throw if web request failed
+            response.EnsureSuccessStatusCodeCustom();         // throw if web request failed
 
             var json = await response.Content.ReadAsStringAsync();
 

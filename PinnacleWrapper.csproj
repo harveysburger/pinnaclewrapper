@@ -83,6 +83,7 @@
     <Compile Include="Data\Feed.cs" />
     <Compile Include="Data\FeedLeague.cs" />
     <Compile Include="Enums\ParlayRestriction.cs" />
+    <Compile Include="Exceptions\SimpleHttpResponseException.cs" />
     <Compile Include="PinnacleClient.cs" />
     <Compile Include="Enums\PlaceBetErrorCode.cs" />
     <Compile Include="Data\PlaceBetRequest.cs" />
