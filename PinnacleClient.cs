@@ -37,9 +37,10 @@ namespace PinnacleWrapper
             CurrencyCode = currencyCode;
             OddsFormat = oddsFormat;
 
-            _httpClient = new HttpClient(httpClientHandler ?? new HttpClientHandler()) {
-                BaseAddress = new Uri(BaseAddress)
-            };
+            _httpClient = new HttpClient(httpClientHandler ?? new HttpClientHandler())
+                {
+                    BaseAddress = new Uri(BaseAddress)
+                };
 
             // put auth header into httpclient
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
