@@ -4,10 +4,7 @@ A complete API client that builds on the <a href="http://www.pinnaclesports.com/
 
 <strong>Update:</strong>
 
-Hotfix:
 Updated various IDs in the models from int to long
-
-Features:
 Added Status property in PeriodType
 Added ParentId property in FixturesEvent
 New enum with the various period status
