@@ -46,7 +46,7 @@ namespace PinnacleWrapper.Data
         public int LineId;
 
         [JsonProperty(PropertyName = "altLineId")]      // Alternate line identification. Not required
-        public int? AltLineId;
+        public long? AltLineId;
 
         [JsonProperty(PropertyName = "pitcher1MustStart")] // Baseball only. Refers to the pitcher for TEAM_TYPE.Team1. This applicable only for MONEYLINE bet type, for all other bet types this has to be TRUE
         public bool? Pitcher1MustStart;

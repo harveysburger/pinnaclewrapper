@@ -10,14 +10,20 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Formatting;
 
+/*
+Wrapper Github: https://github.com/anderj017/pinnaclewrapper
+Pinnacle API Doc: https://www.pinnacle.com/en/api/manual#GSettledFixtures
+Pinnacle Github: https://pinnacleapi.github.io/linesapi#operation/Odds_Straight_V1_Get
+*/
 namespace PinnacleWrapper
 {
     public class PinnacleClient
     {
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient;
 
-        private string _clientId;
-        private string _password;
+        private readonly string _clientId;
+        private readonly string _password;
+        private readonly string _baseAddress;
 
         public string CurrencyCode { get; private set; }
         public OddsFormat OddsFormat { get; private set; }
@@ -27,16 +33,15 @@ namespace PinnacleWrapper
 
         private DateTime? _lastFeedRequest;
 
-        private const string BaseAddress = "https://api.pinnaclesports.com/";
-
-        public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat)
+        public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat, string baseAddress = "https://api.pinnacle.com/")
         {
             _clientId = clientId;
             _password = password;
+            _baseAddress = baseAddress;
             CurrencyCode = currencyCode;
             OddsFormat = oddsFormat;
 
-            _httpClient = new HttpClient {BaseAddress = new Uri(BaseAddress)};
+            _httpClient = new HttpClient {BaseAddress = new Uri(_baseAddress)};
             
             // put auth header into httpclient
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
@@ -317,7 +322,7 @@ namespace PinnacleWrapper
         {
             var sb = new StringBuilder();
 
-            sb.AppendFormat("v1/fixtures?sportId={0}", request.SportId);
+            sb.Append($"{request.ApiVersion}/fixtures?sportId={request.SportId}");
 
             if (request.LeagueIds != null && request.LeagueIds.Any())
                 sb.AppendFormat("&leagueIds={0}", string.Join(",", request.LeagueIds));
@@ -336,7 +341,7 @@ namespace PinnacleWrapper
         {
             var sb = new StringBuilder();
 
-            sb.AppendFormat("v1/odds?sportId={0}", request.SportId);
+            sb.Append($"{request.ApiVersion}/odds?sportId={request.SportId}");
 
             if (request.LeagueIds != null && request.LeagueIds.Any())
                 sb.AppendFormat("&leagueIds={0}", string.Join(",", request.LeagueIds));
