@@ -8,7 +8,7 @@ namespace PinnacleWrapper.Data
     public class TotalPoints
     {
         [XmlElement("@altLineId")]
-        public int? AltLineId;
+        public long? AltLineId;
 
         [XmlElement("points")]
         public decimal Points;

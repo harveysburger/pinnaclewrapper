@@ -5,7 +5,7 @@ namespace PinnacleWrapper.Data
     public class TotalPointsType
     {
         [JsonProperty(PropertyName = "altLineId")]
-        public int AltLineId { get; set; }
+        public long AltLineId { get; set; }
 
         [JsonProperty(PropertyName = "points")]
         public decimal Points { get; set; }

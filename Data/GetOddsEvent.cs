@@ -6,7 +6,7 @@ namespace PinnacleWrapper.Data
     public class GetOddsEvent
     {
         [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [JsonProperty(PropertyName = "periods")]
         public List<PeriodType> Periods { get; set; }

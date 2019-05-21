@@ -5,7 +5,7 @@ namespace PinnacleWrapper.Data
     public class SpreadType
     {
         [JsonProperty(PropertyName = "altLineId")]
-        public int AltLineId { get; set; }
+        public long AltLineId { get; set; }
 
         [JsonProperty(PropertyName = "hdp")]
         public decimal HomeHandicap { get; set; }

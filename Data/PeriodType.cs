@@ -38,5 +38,8 @@ namespace PinnacleWrapper.Data
 
         [JsonProperty(PropertyName = "maxTeamTotal")]
         public decimal MaxTeamTotal { get; set; }
+
+        [JsonProperty(PropertyName = "status")]
+        public int Status { get; set; }
     }
 }

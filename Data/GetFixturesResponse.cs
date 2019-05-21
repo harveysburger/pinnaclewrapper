@@ -29,7 +29,7 @@ namespace PinnacleWrapper.Data
     public class FixturesEvent
     {
         [JsonProperty(PropertyName = "id")]
-        public int Id;
+        public long Id;
 
         [JsonProperty(PropertyName = "starts")]
         public DateTime Start;
@@ -51,5 +51,9 @@ namespace PinnacleWrapper.Data
 
         [JsonProperty(PropertyName = "parlayRestriction")]
         public ParlayRestriction ParlayRestriction;
+
+        [JsonProperty(PropertyName = "parentId")]
+        public long ParentId;
+        
     }
 }

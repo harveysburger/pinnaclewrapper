@@ -16,7 +16,7 @@ namespace PinnacleWrapper.Data
         public int? LineId;
         
         [JsonProperty(PropertyName = "altLineId")]
-        public int? AltLineId;                      // This would be needed to place the bet if the handicap is on alternate line, otherwise it will not be in the response.
+        public long? AltLineId;                      // This would be needed to place the bet if the handicap is on alternate line, otherwise it will not be in the response.
 
         [JsonProperty(PropertyName = "team1Score")]
         public int? Team1Score;                     // Soccer only
