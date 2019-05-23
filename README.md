@@ -17,8 +17,8 @@ Pinnacle has deprecated GetFeed, instead offering GetFixtures and GetOdds. The w
 
 These references are available via NuGet.
 
-    Newtonsoft.Json 
-	System.Net.Http.Formatting (part of the Microsoft.AspNet.WebApi.Client package)
+	Newtonsoft.Json 
+	Microsoft.AspNet.WebApi.Client
 
 <strong>Usage:</strong>
 
