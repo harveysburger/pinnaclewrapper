@@ -8,8 +8,8 @@ Updated various IDs in the models from int to long
 Added Status property in PeriodType
 Added ParentId property in FixturesEvent
 New enum with the various period status
-Added optional baseAddress to PinnacleClient constructor (pinnacle shifted some of its business under alternative URLs)
-Added optional apiVersion parameter in GetOddsRequest and GetFixturesRequests because the version isn't the same between the various domains (some use v3/odds, others v1/odds...)
+Added optional baseAddress to PinnacleClient constructor to hit API located somewhere other than https://api.pinnacle.com
+Added optional apiVersion parameter in GetOddsRequest and GetFixturesRequests
 
 Pinnacle has deprecated GetFeed, instead offering GetFixtures and GetOdds. The wrapper has kept GetFeed for legacy purposes but it will be removed in a future release.
 
