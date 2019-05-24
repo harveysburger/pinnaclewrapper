@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Formatting;
 
 /*
-Wrapper Github: https://github.com/anderj017/pinnaclewrapper
+Wrapper Github: https://github.com/harveysburger/pinnaclewrapper
 Pinnacle API Doc: https://www.pinnacle.com/en/api/manual#GSettledFixtures
 Pinnacle Github: https://pinnacleapi.github.io/linesapi#operation/Odds_Straight_V1_Get
 */
@@ -41,12 +41,11 @@ namespace PinnacleWrapper
             CurrencyCode = currencyCode;
             OddsFormat = oddsFormat;
 
-            _httpClient = new HttpClient {BaseAddress = new Uri(_baseAddress)};
-            
+            _httpClient = new HttpClient { BaseAddress = new Uri(_baseAddress) };
+
             // put auth header into httpclient
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
-                    Convert.ToBase64String(
-                        Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _clientId, _password))));
+                    Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _clientId, _password))));
         }
 
         protected async Task<T> GetXmlAsync<T>(string requestType, params object[] values)
@@ -60,7 +59,7 @@ namespace PinnacleWrapper
 
             var xmlFormatter = new XmlMediaTypeFormatter { UseXmlSerializer = true };
 
-            var apiResponse = await response.Content.ReadAsAsync<T>(new[] {xmlFormatter});
+            var apiResponse = await response.Content.ReadAsAsync<T>(new[] { xmlFormatter });
 
             if (apiResponse.IsValid)
             {
@@ -84,112 +83,7 @@ namespace PinnacleWrapper
         {
             return (await GetJsonAsync<CurrenciesResponse>("v2/currencies")).Currencies;
         }
-        
-        #region GetFeed
 
-        protected string GetFeedRequestUri(int sportId, int[] leagueId, OddsFormat format, string currency, long lastTimestamp, int isLive)
-        {
-            var sb = new StringBuilder();
-            sb.AppendFormat("feed?sportid={0}", sportId);
-            if (leagueId.Length > 0)
-                sb.AppendFormat("&leagueid={0}", string.Join("-", leagueId));
-            sb.AppendFormat("&oddsformat={0}", (int)format);
-            sb.AppendFormat("&currencycode={0}", currency);
-
-            if (lastTimestamp > 0)
-            {
-                sb.AppendFormat("&last={0}", lastTimestamp);
-            }
-
-            if (isLive == 0 || isLive == 1)
-            {
-                sb.AppendFormat("&islive={0}", isLive);
-            }
-
-            return sb.ToString();
-        }
-
-        protected bool IsFairFeedRequest(long lastTimestamp)
-        {
-            if (_lastFeedRequest.HasValue)
-            {
-                var minRequestInterval = (lastTimestamp > 0 ? MinimumFeedRefreshWithLast : MinimumFeedRefresh);
-                var interval = DateTime.Now - _lastFeedRequest.Value;
-
-                if (interval.TotalSeconds < minRequestInterval)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        protected async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, int isLive)
-        {
-            //if (!IsFairFeedRequest(lastTimestamp))
-            //    throw new Exception(
-            //        string.Format(
-            //            "Too many feed requests. Minimum interval time between request is {0} seconds or {1} seconds when specifying the last parameter",
-            //            MinimumFeedRefresh,
-            //            MinimumFeedRefreshWithLast));
-
-            _lastFeedRequest = DateTime.Now;
-            var uri = GetFeedRequestUri(sportId, leagueIds, format, currency, lastTimestamp, isLive);
-
-            return (await GetXmlAsync<FeedResponse>(uri)).Feed;
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        public async Task<Feed> GetFeed(int sportId)
-        {
-            return await GetFeed(sportId, new int[]{}, OddsFormat, CurrencyCode, -1, -1);
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        public async Task<Feed> GetFeed(int sportId, long lastTimestamp)
-        {
-            return await GetFeed(sportId, new int[] { }, OddsFormat, CurrencyCode, lastTimestamp);
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        public async Task<Feed> GetFeed(int sportId, int[] leagueIds)
-        {
-            return await GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, -1, -1);
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, long lastTimestamp)
-        {
-            return await GetFeed(sportId, leagueIds, OddsFormat, CurrencyCode, lastTimestamp, -1);
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency)
-        {
-            return await GetFeed(sportId, leagueIds, format, currency, -1, -1);
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, bool isLive)
-        {
-            return await GetFeed(sportId, leagueIds, format, currency, -1, isLive ? 1 : 0);
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp)
-        {
-            return await GetFeed(sportId, leagueIds, format, currency, lastTimestamp, -1);
-        }
-
-        [Obsolete("GetFeed is Deprecated, please use GetOdds and GetFixtures")]
-        public async Task<Feed> GetFeed(int sportId, int[] leagueIds, OddsFormat format, string currency, long lastTimestamp, bool isLive)
-        {
-            return await GetFeed(sportId, leagueIds, format, currency, lastTimestamp, isLive ? 1 : 0);
-        }
-
-        #endregion
 
         protected async Task<T> GetJsonAsync<T>(string requestType, params object[] values)
         {
@@ -209,7 +103,7 @@ namespace PinnacleWrapper
             var requestPostData = JsonConvert.SerializeObject(requestData);
 
             var response = await _httpClient.PostAsync(requestType,
-                new StringContent(requestPostData, Encoding.UTF8, "application/json")).ConfigureAwait(false); 
+                new StringContent(requestPostData, Encoding.UTF8, "application/json")).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();         // throw if web request failed
 

@@ -1,24 +1,20 @@
 # C# Wrapper for the PinnacleSports API
 
-A complete API client that builds on the <a href="http://www.pinnaclesports.com/en/api/manual">PinnacleSports API Documentation</a>
+A complete API client that builds on the <a href="https://www.pinnacle.com/en/api/manual">PinnacleSports API Documentation</a>
 
 <strong>Update:</strong>
 
-Updated various IDs in the models from int to long
-Added Status property in PeriodType
-Added ParentId property in FixturesEvent
-New enum with the various period status
-Added optional baseAddress to PinnacleClient constructor to hit API located somewhere other than https://api.pinnacle.com
-Added optional apiVersion parameter in GetOddsRequest and GetFixturesRequests
-
-Pinnacle has deprecated GetFeed, instead offering GetFixtures and GetOdds. The wrapper has kept GetFeed for legacy purposes but it will be removed in a future release.
+Library now targeting .netstandard 2.0 so should work from both .Net Framework 4.7.2 and .Net Core 2.2
+You can override the default api version, v1, for the Fixtures and Odds API
+PinnacleClient constructor now has an optional baseUrl parameter, defaulted to the value that was previously hardcoded in the class.
+GetFeed is no longer supported. Instead use GetFixtures and GetOdds. If you need GetFeed revert to v1.0 of this library.
 
 <strong>References:</strong>
 
 These references are available via NuGet.
 
-	Newtonsoft.Json 
-	Microsoft.AspNet.WebApi.Client
+    Newtonsoft.Json 
+	Microsoft.AspNet.WebApi.Client package
 
 <strong>Usage:</strong>
 
@@ -37,8 +33,9 @@ Example (continuing from above):
     Thread.Sleep(5000);    // wait 5 seconds between calls!
     var var odds2 = await _client.GetOdds(new GetOddsRequest(12, odds.Last));
 
-A future release will monitor lines for changes and fire an event when it updates.
+This library started off as a cleaned up version of the Pinnacle API wrapper created by <a href="http://www.broculos.net/2014/04/pinnacle-sports-how-to-implement-rest.html">Nuno Freitas</a> and has been extended and tweaked along the way since.
 
-I have cleaned up and extended the wrapper created by <a href="http://www.broculos.net/2014/04/pinnacle-sports-how-to-implement-rest.html">Nuno Freitas</a> to support the JSON functions (GetClientBalance, PlaceBet, GetLine, GetBets, GetInRunning, GetFixtures and GetOdds).
+The initial location of this wrapper was https://github.com/anderj017/pinnaclewrapper, on May 23rd 2019 the project was transferred to https://github.com/harveysburger/pinnaclewrapper. Thanks @anderj017
+
 	
 Enjoy!

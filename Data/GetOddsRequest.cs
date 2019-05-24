@@ -4,9 +4,9 @@ namespace PinnacleWrapper.Data
 {
     public class GetOddsRequest
     {
-        public int SportId { get; set; } 
-        public List<int> LeagueIds { get; set; } 
-        public long Since { get; set; } 
+        public int SportId { get; set; }
+        public List<int> LeagueIds { get; set; }
+        public long Since { get; set; }
         public bool IsLive { get; set; }
         public string ApiVersion { get; set; }
 

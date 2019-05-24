@@ -1,119 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{49CCCA7D-98C3-44BA-94F6-45DA4AFF7886}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PinnacleWrapper</RootNamespace>
-    <AssemblyName>PinnacleWrapper</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Data\Bet.cs" />
-    <Compile Include="Data\BetAmount.cs" />
-    <Compile Include="Data\GetFixturesResponse.cs" />
-    <Compile Include="Data\GetFixturesRequest.cs" />
-    <Compile Include="Data\GetOddsEvent.cs" />
-    <Compile Include="Data\GetOddsLeague.cs" />
-    <Compile Include="Data\GetOddsRequest.cs" />
-    <Compile Include="Data\GetOddsResponse.cs" />
-    <Compile Include="Data\MoneyLineType.cs" />
-    <Compile Include="Data\PeriodType.cs" />
-    <Compile Include="Data\SpreadType.cs" />
-    <Compile Include="Data\TeamTotalPoints.cs" />
-    <Compile Include="Data\TeamTotalPointsType.cs" />
-    <Compile Include="Data\TotalPoints.cs" />
-    <Compile Include="Data\TotalPointsType.cs" />
-    <Compile Include="Enums\BetListType.cs" />
-    <Compile Include="Enums\BetStatus.cs" />
-    <Compile Include="Enums\BetType.cs" />
-    <Compile Include="Data\ClientBalance.cs" />
-    <Compile Include="Data\Currency.cs" />
-    <Compile Include="Data\Event.cs" />
-    <Compile Include="Data\FeedSport.cs" />
-    <Compile Include="Data\GetBetsResponse.cs" />
-    <Compile Include="Data\GetInRunningResponse.cs" />
-    <Compile Include="Data\GetLineResponse.cs" />
-    <Compile Include="Enums\EventStatus.cs" />
-    <Compile Include="Enums\GetLineResponseStatus.cs" />
-    <Compile Include="Enums\InRunningState.cs" />
-    <Compile Include="Data\League.cs" />
-    <Compile Include="Data\MoneyLine.cs" />
-    <Compile Include="Enums\LiveStatus.cs" />
-    <Compile Include="Enums\OddsFormat.cs" />
-    <Compile Include="Data\Period.cs" />
-    <Compile Include="Data\Feed.cs" />
-    <Compile Include="Data\FeedLeague.cs" />
-    <Compile Include="Enums\ParlayRestriction.cs" />
-    <Compile Include="Enums\PeriodStatus.cs" />
-    <Compile Include="PinnacleClient.cs" />
-    <Compile Include="Enums\PlaceBetErrorCode.cs" />
-    <Compile Include="Data\PlaceBetRequest.cs" />
-    <Compile Include="Data\PlaceBetResponse.cs" />
-    <Compile Include="Enums\PlaceBetResponseStatus.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\CurrenciesResponse.cs" />
-    <Compile Include="Data\FeedResponse.cs" />
-    <Compile Include="Data\LeaguesResponse.cs" />
-    <Compile Include="Data\XmlResponse.cs" />
-    <Compile Include="Data\ResponseError.cs" />
-    <Compile Include="Enums\SideType.cs" />
-    <Compile Include="Data\Sport.cs" />
-    <Compile Include="Data\SportsResponse.cs" />
-    <Compile Include="Data\Spread.cs" />
-    <Compile Include="Enums\Status.cs" />
-    <Compile Include="Data\Team.cs" />
-    <Compile Include="Enums\TeamType.cs" />
-    <Compile Include="Enums\WinRiskType.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
