@@ -1,0 +1,2 @@
+cd SampleConsoleApp
+dotnet publish -c Release -r win10-x64
