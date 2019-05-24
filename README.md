@@ -5,8 +5,11 @@ A complete API client that builds on the <a href="https://www.pinnacle.com/en/ap
 <strong>Update:</strong>
 
 Library now targeting .netstandard 2.0 so should work from both .Net Framework 4.7.2 and .Net Core 2.2
+
 You can override the default api version, v1, for the Fixtures and Odds API
+
 PinnacleClient constructor now has an optional baseUrl parameter, defaulted to the value that was previously hardcoded in the class.
+
 GetFeed functionalities were removed as they are deprecated by Pinnacle, use GetFixtures and GetOdds instead. If you need GetFeed revert to v1.0 of this library.
 
 <strong>References:</strong>
