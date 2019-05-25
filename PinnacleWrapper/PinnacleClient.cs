@@ -21,31 +21,22 @@ namespace PinnacleWrapper
     {
         private readonly HttpClient _httpClient;
 
-        private readonly string _clientId;
-        private readonly string _password;
-        private readonly string _baseAddress;
-
         public string CurrencyCode { get; private set; }
         public OddsFormat OddsFormat { get; private set; }
 
         private const int MinimumFeedRefreshWithLast = 5;   // minimum time in seconds between calls when supplying the last timestamp parameter
         private const int MinimumFeedRefresh = 60;          // minimum time in seconds between calls without last timestamp parameter
 
-        private DateTime? _lastFeedRequest;
-
         public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat, string baseAddress = "https://api.pinnacle.com/")
         {
-            _clientId = clientId;
-            _password = password;
-            _baseAddress = baseAddress;
             CurrencyCode = currencyCode;
             OddsFormat = oddsFormat;
 
-            _httpClient = new HttpClient { BaseAddress = new Uri(_baseAddress) };
+            _httpClient = new HttpClient { BaseAddress = new Uri(baseAddress) };
 
             // put auth header into httpclient
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
-                    Convert.ToBase64String(Encoding.ASCII.GetBytes(string.Format("{0}:{1}", _clientId, _password))));
+                    Convert.ToBase64String(Encoding.ASCII.GetBytes($"{clientId}:{password}")));
         }
 
         protected async Task<T> GetXmlAsync<T>(string requestType, params object[] values)

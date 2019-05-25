@@ -38,3 +38,6 @@ namespace PinnacleWrapper.Data
         public BetAmount MaxBetAmount { get; set; }
     }
 }
+
+
+//TODO: Add support for team totals
