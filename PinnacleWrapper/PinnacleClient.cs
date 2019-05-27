@@ -32,7 +32,7 @@ namespace PinnacleWrapper
         {
             CurrencyCode = currencyCode;
             OddsFormat = oddsFormat;
-            _httpClient = GetHttpClientInstance(clientId, password, baseAddress, false);
+            _httpClient = GetHttpClientInstance(clientId, password, true, baseAddress);
         }
 
         public PinnacleClient(string currencyCode, OddsFormat oddsFormat, HttpClient httpClient)
@@ -243,23 +243,34 @@ namespace PinnacleWrapper
             return GetJsonAsync<GetOddsResponse>(sb.ToString());
         }
 
-        public static HttpClient GetHttpClientInstance(string clientId, string password, string baseAddress = DefaultBaseAddress, bool gzipCompression = true)
+        public static HttpClient GetHttpClientInstance(string clientId, string password, HttpClientHandler handler, string baseAddress = DefaultBaseAddress)
+        {
+            var httpClient = new HttpClient(handler);
+
+            return GetHttpClientInstanceBase(clientId, password, baseAddress, httpClient);
+        }
+
+        public static HttpClient GetHttpClientInstance(string clientId, string password, bool gzipCompression = true, string baseAddress = DefaultBaseAddress)
         {
             HttpClient httpClient;
 
             if (gzipCompression)
             {
-                var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate };
-                httpClient = new HttpClient(handler);
+                httpClient = new HttpClient(new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate }, true);
             }
             else
             {
                 httpClient = new HttpClient();
             }
 
+            return GetHttpClientInstanceBase(clientId, password, baseAddress, httpClient);
+        }
+
+        private static HttpClient GetHttpClientInstanceBase(string clientId, string password, string baseAddress, HttpClient httpClient)
+        {
             httpClient.BaseAddress = new Uri(baseAddress);
 
-            httpClient.DefaultRequestHeaders.Authorization =
+            httpClient.DefaultRequestHeaders.Authorization = 
                 new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{clientId}:{password}")));
 
             return httpClient;

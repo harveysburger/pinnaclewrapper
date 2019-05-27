@@ -29,7 +29,7 @@ namespace SampleConsoleApp
                     config = JsonConvert.DeserializeObject<AppConfig>(json);
                 }
 
-                using (var httpClient = PinnacleClient.GetHttpClientInstance(config.Username, config.Password, config.BaseUrl, true))
+                using (var httpClient = PinnacleClient.GetHttpClientInstance(config.Username, config.Password, true, config.BaseUrl))
                 {
                     var api = new PinnacleClient(config.Currency, config.OddsFormat, httpClient);
 
