@@ -21,43 +21,42 @@ namespace SampleConsoleApp
 
             try
             {
-                AppConfig configuration;
+                AppConfig config;
 
                 using (StreamReader r = new StreamReader("appsettings.json"))
                 {
                     string json = r.ReadToEnd();
-                    configuration = JsonConvert.DeserializeObject<AppConfig>(json);
+                    config = JsonConvert.DeserializeObject<AppConfig>(json);
                 }
 
-                var api = new PinnacleClient(configuration.Username, configuration.Password,
-                    configuration.Currency, OddsFormat.AMERICAN, configuration.BaseUrl);
-                long lastFixture = 0;
-                long lastLine = 0;
+                using (var httpClient = PinnacleClient.GetHttpClientInstance(config.Username, config.Password, config.BaseUrl, true))
+                {
+                    var api = new PinnacleClient(config.Currency, config.OddsFormat, httpClient);
 
-                var fixtures = await api.GetFixtures(new GetFixturesRequest(SampleSportId, lastFixture))
-                    .ConfigureAwait(true);
+                    long lastFixture = 0;
+                    long lastLine = 0;
 
-                var lines = await api.GetOdds(new GetOddsRequest(fixtures.SportId,fixtures.Leagues.Select(i => i.Id).ToList(), lastLine, false))
-                    .ConfigureAwait(true);
+                    var fixtures = await api.GetFixtures(new GetFixturesRequest(SampleSportId, lastFixture));
 
-                var leagues = await api.GetLeagues(SampleSportId)
-                    .ConfigureAwait(true);
+                    var lines = await api.GetOdds(new GetOddsRequest(fixtures.SportId, fixtures.Leagues.Select(i => i.Id).ToList(), lastLine, false));
 
-                // Subsequent calls to GetOdds or GetFixtures should pass these 'Last' values to get only what changed since instead of the full snapshot
-                lastFixture = fixtures.Last;
-                lastLine = lines.Last;
+                    var leagues = await api.GetLeagues(SampleSportId);
 
-                SaveResultsToOutputFolder(fixtures, lines, leagues);
+                    // Subsequent calls to GetOdds or GetFixtures should pass these 'Last' values to get only what changed since instead of the full snapshot
+                    lastFixture = fixtures.Last;
+                    lastLine = lines.Last;
+
+                    SaveResultsToOutputFolder(fixtures, lines, leagues);
+                }
 
                 Console.WriteLine("Done!");
+                Logger.Info("Done!");
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 Logger.Error(e, "Exception in Task Run.");
-            }
-
-            Logger.Info("Done!");
+            } 
             
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();

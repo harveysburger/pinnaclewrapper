@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -21,22 +22,23 @@ namespace PinnacleWrapper
     {
         private readonly HttpClient _httpClient;
 
-        public string CurrencyCode { get; private set; }
-        public OddsFormat OddsFormat { get; private set; }
+        public const string DefaultBaseAddress = "https://api.pinnacle.com/";
 
-        private const int MinimumFeedRefreshWithLast = 5;   // minimum time in seconds between calls when supplying the last timestamp parameter
-        private const int MinimumFeedRefresh = 60;          // minimum time in seconds between calls without last timestamp parameter
+        public string CurrencyCode { get;  }
+        public OddsFormat OddsFormat { get; }
 
-        public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat, string baseAddress = "https://api.pinnacle.com/")
+        public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat, string baseAddress = DefaultBaseAddress)
         {
             CurrencyCode = currencyCode;
             OddsFormat = oddsFormat;
+            _httpClient = GetHttpClientInstance(clientId, password, baseAddress, false);
+        }
 
-            _httpClient = new HttpClient { BaseAddress = new Uri(baseAddress) };
-
-            // put auth header into httpclient
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic",
-                    Convert.ToBase64String(Encoding.ASCII.GetBytes($"{clientId}:{password}")));
+        public PinnacleClient(string currencyCode, OddsFormat oddsFormat, HttpClient httpClient)
+        {
+            CurrencyCode = currencyCode;
+            OddsFormat = oddsFormat;
+            _httpClient = httpClient;
         }
 
         protected async Task<T> GetXmlAsync<T>(string requestType, params object[] values)
@@ -57,7 +59,7 @@ namespace PinnacleWrapper
                 return apiResponse;
             }
 
-            throw new Exception("Pinnacle Sports API error: " + apiResponse.Error.Message);
+            throw new Exception($"Pinnacle Sports API error: {apiResponse.Error.Message}");
         }
 
         public async Task<List<Sport>> GetSports()
@@ -67,7 +69,7 @@ namespace PinnacleWrapper
 
         public async Task<List<League>> GetLeagues(int sportId)
         {
-            return (await GetJsonAsync<LeaguesResponse>("v2/leagues?sportid={0}", sportId)).Leagues;
+            return (await GetJsonAsync<LeaguesResponse>($"v2/leagues?sportId={sportId}")).Leagues;
         }
 
         public async Task<List<Currency>> GetCurrencies()
@@ -114,9 +116,9 @@ namespace PinnacleWrapper
         {
             // get request uri
             var sb = new StringBuilder();
-            sb.AppendFormat("v1/bets?betlist={0}", type.ToString().ToLower());
-            sb.AppendFormat("&fromDate={0}", startDate.ToString("yyyy-MM-dd"));
-            sb.AppendFormat("&toDate={0}", endDate.ToString("yyyy-MM-dd"));
+            sb.Append($"v1/bets?betlist={type.ToString().ToLower()}");
+            sb.Append($"&fromDate={startDate:yyyy-MM-dd}");
+            sb.Append($"&toDate={endDate:yyyy-MM-dd}");
 
             var uri = sb.ToString();
 
@@ -128,7 +130,7 @@ namespace PinnacleWrapper
             // get request uri
             var sb = new StringBuilder();
 
-            sb.AppendFormat("v1/bets?betids={0}", string.Join(",", betIds));
+            sb.Append($"v1/bets?betids={string.Join(",", betIds)}");
 
             var uri = sb.ToString();
 
@@ -159,38 +161,38 @@ namespace PinnacleWrapper
             if (team == null)
             {
                 if (betType == BetType.MoneyLine || betType == BetType.Spread || betType == BetType.TeamTotalPoints)
-                    throw new Exception(string.Format("TeamType is required for {0} Bets!", betType));
+                    throw new Exception($"TeamType is required for {betType} Bets!");
             }
 
             if (side == null)
             {
                 if (betType == BetType.TotalPoints || betType == BetType.TeamTotalPoints)
-                    throw new Exception(string.Format("SideType is required for {0} Bets!", betType));
+                    throw new Exception($"SideType is required for {betType} Bets!");
             }
 
             if (handicap == null)
             {
                 if (betType == BetType.Spread || betType == BetType.TotalPoints || betType == BetType.TeamTotalPoints)
-                    throw new Exception(string.Format("Handicap is required for {0} Bets!", betType));
+                    throw new Exception($"Handicap is required for {betType} Bets!");
             }
 
             // get request uri
             var sb = new StringBuilder();
-            sb.AppendFormat("v1/line?sportId={0}", sportId);
-            sb.AppendFormat("&leagueId={0}", leagueId);
-            sb.AppendFormat("&eventId={0}", eventId);
-            sb.AppendFormat("&betType={0}", betType.ToString().ToUpper());
-            sb.AppendFormat("&oddsFormat={0}", oddsFormat.ToString().ToUpper());
-            sb.AppendFormat("&periodNumber={0}", periodNumber);                 // i.e. for soccer: 0 = Game, 1 = 1st Half, 2 = 2nd Half
+            sb.Append($"v1/line?sportId={sportId}");
+            sb.Append($"&leagueId={leagueId}");
+            sb.Append($"&eventId={eventId}");
+            sb.Append($"&betType={betType.ToString().ToUpper()}");
+            sb.Append($"&oddsFormat={oddsFormat.ToString().ToUpper()}");
+            sb.Append($"&periodNumber={periodNumber}");                 // i.e. for soccer: 0 = Game, 1 = 1st Half, 2 = 2nd Half
 
             if (team != null)
-                sb.AppendFormat("&team={0}", team.ToString().ToUpper());
+                sb.Append($"&team={team.ToString().ToUpper()}");
 
             if (side != null)
-                sb.AppendFormat("&side={0}", side.ToString().ToUpper());
+                sb.Append($"&side={side.ToString().ToUpper()}");
 
             if (handicap != null)
-                sb.AppendFormat("&handicap={0}", handicap.ToString().ToUpper());
+                sb.Append($"&handicap={handicap.ToString().ToUpper()}");
 
             var uri = sb.ToString();
 
@@ -210,13 +212,13 @@ namespace PinnacleWrapper
             sb.Append($"{request.ApiVersion}/fixtures?sportId={request.SportId}");
 
             if (request.LeagueIds != null && request.LeagueIds.Any())
-                sb.AppendFormat("&leagueIds={0}", string.Join(",", request.LeagueIds));
+                sb.Append($"&leagueIds={string.Join(",", request.LeagueIds)}");
 
             if (request.Since > 0)
-                sb.AppendFormat("&since={0}", request.Since);
+                sb.Append($"&since={request.Since}");
 
             if (request.IsLive)
-                sb.AppendFormat("&IsLive={0}", 1);
+                sb.Append($"&IsLive={request.IsLive}");
 
 
             return GetJsonAsync<GetFixturesResponse>(sb.ToString());
@@ -229,19 +231,43 @@ namespace PinnacleWrapper
             sb.Append($"{request.ApiVersion}/odds?sportId={request.SportId}");
 
             if (request.LeagueIds != null && request.LeagueIds.Any())
-                sb.AppendFormat("&leagueIds={0}", string.Join(",", request.LeagueIds));
+                sb.Append($"&leagueIds={string.Join(",", request.LeagueIds)}");
 
             if (request.Since > 0)
-                sb.AppendFormat("&since={0}", request.Since);
+                sb.Append($"&since={request.Since}");
 
             if (request.IsLive)
-                sb.AppendFormat("&IsLive={0}", 1);
+                sb.Append($"&IsLive={request.IsLive}");
 
-            sb.AppendFormat("&oddsFormat={0}", OddsFormat);
-            sb.AppendFormat("&currencycode={0}", CurrencyCode);
+            sb.Append($"&oddsFormat={OddsFormat}");
+            sb.Append($"&currencycode={CurrencyCode}"); //TODO: Pinnacle's doc suggests the parameter should be toCurrencyCode, not currencycode
 
             return GetJsonAsync<GetOddsResponse>(sb.ToString());
         }
+
+        public static HttpClient GetHttpClientInstance(string clientId, string password, string baseAddress = DefaultBaseAddress, bool gzipCompression = true)
+        {
+            HttpClient httpClient;
+
+            if (gzipCompression)
+            {
+                var handler = new HttpClientHandler() { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate };
+                httpClient = new HttpClient(handler);
+            }
+            else
+            {
+                httpClient = new HttpClient();
+            }
+
+            httpClient.BaseAddress = new Uri(baseAddress);
+
+            httpClient.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Basic", Convert.ToBase64String(Encoding.ASCII.GetBytes($"{clientId}:{password}")));
+
+            return httpClient;
+        }
+
     }
+
 }
 

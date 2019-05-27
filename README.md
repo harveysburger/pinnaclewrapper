@@ -4,6 +4,12 @@ A complete API client that builds on the [PinnacleSports API Documentation](http
 
 **Update**
 
+2.1
+- New constructor that accepts an HttpClient. 
+- PinnacleClient.GetHttpClientInstance can be used to instantiate an httpclient necessary headers for Pinnacle's Api and option to enable GZIP
+
+
+2.0
 - First version published on nuget.org
 - Library now targeting .netstandard 2.0 so should work from both .Net Framework 4.7.2 and .Net Core 2.2
 - You can override the default api version, v1, for the Fixtures and Odds API
@@ -23,9 +29,15 @@ These references are available via NuGet.
 Here's an example of getting all lines for upcoming Tennis matches (across all leagues):
 
 ```
-var client = new PinnacleClient("username", "password", "AUD", OddsFormat.Decimal);
-var fixtures = client.GetFixtures(new GetFixturesRequest(33));	// 33 is the Tennis SportId. This gets all Events currently offered
-var odds = client.GetOdds(new GetOddsRequest(12)); // this retrieves the odds that correspond to each fixture.
+var httpClient = PinnacleClient.GetHttpClientInstance("username", "password");
+
+var api = new PinnacleClient("AUD", OddsFormat.DECIMAL, httpClient);
+
+// 33 is the Tennis SportId. This gets all Events currently offered
+var fixtures = await api.GetFixtures(new GetFixturesRequest(33));
+
+// this retrieves the odds that correspond to each fixture.
+var odds = await client.GetOdds(new GetOddsRequest(33));
 ```
 
 Refreshing lines:
@@ -36,7 +48,7 @@ Example (continuing from above):
 
 ```
 Thread.Sleep(5000);  // wait between calls one way or another. Calling the API too aggressively may get you blocked from using the API.
-var oddsChanges = await _client.GetOdds(new GetOddsRequest(12, odds.Last));   
+var oddsChanges = await _client.GetOdds(new GetOddsRequest(33, odds.Last));   
 ```
 
 This library started off as a cleaned up version by anderj017 of the [Pinnacle API wrapper created by Nuno Freitas](http://www.broculos.net/2014/04/pinnacle-sports-how-to-implement-rest.html) and has been extended and tweaked by various people since.
