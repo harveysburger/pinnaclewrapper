@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PinnacleWrapper;
 using PinnacleWrapper.Data;
-using PinnacleWrapper.Enums;
 
 namespace SampleConsoleApp
 {
+    
     class Program
     {
         private static readonly NLog.ILogger Logger = NLog.LogManager.GetCurrentClassLogger(); 

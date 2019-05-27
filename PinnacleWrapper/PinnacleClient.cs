@@ -24,7 +24,8 @@ namespace PinnacleWrapper
 
         public const string DefaultBaseAddress = "https://api.pinnacle.com/";
 
-        public string CurrencyCode { get;  }
+        public string CurrencyCode { get; }
+        
         public OddsFormat OddsFormat { get; }
 
         public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat, string baseAddress = DefaultBaseAddress)
@@ -76,8 +77,7 @@ namespace PinnacleWrapper
         {
             return (await GetJsonAsync<CurrenciesResponse>("v2/currencies")).Currencies;
         }
-
-
+         
         protected async Task<T> GetJsonAsync<T>(string requestType, params object[] values)
         {
             var response = await _httpClient.GetAsync(string.Format(requestType, values)).ConfigureAwait(false);
@@ -86,7 +86,6 @@ namespace PinnacleWrapper
 
             var json = await response.Content.ReadAsStringAsync();
 
-            // deserialise json async
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
         }
 
@@ -102,7 +101,6 @@ namespace PinnacleWrapper
 
             var json = await response.Content.ReadAsStringAsync();
 
-            // deserialise async
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
         }
 
