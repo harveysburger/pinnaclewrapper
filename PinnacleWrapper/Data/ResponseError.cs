@@ -7,10 +7,10 @@ namespace PinnacleWrapper.Data
     [XmlRoot("err")]
     public class ResponseError
     {
-        [XmlAttribute("code")]
+        [XmlAttribute("code")] 
         public int Code { get; set; }
 
-        [XmlText]
+        [XmlText] 
         public string Message { get; set; }
     }
 }

@@ -15,10 +15,10 @@ namespace PinnacleWrapper.Data
         [JsonProperty(PropertyName = "placedAt")]
         public DateTime PlacedAt;
 
-        [JsonProperty(PropertyName = "win")]
+        [JsonProperty(PropertyName = "win")] 
         public decimal Win;
 
-        [JsonProperty(PropertyName = "risk")]
+        [JsonProperty(PropertyName = "risk")] 
         public decimal Risk;
 
         [JsonProperty(PropertyName = "winLoss")]

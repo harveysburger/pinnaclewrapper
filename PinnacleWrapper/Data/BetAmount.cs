@@ -9,7 +9,7 @@ namespace PinnacleWrapper.Data
         [XmlElement("spread")]
         public double Spread { get; set; }
 
-        [XmlElement("moneyLine")]
+        [XmlElement("moneyLine")] 
         public double MoneyLine { get; set; }
     }
 }

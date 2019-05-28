@@ -4,7 +4,7 @@
     public enum LiveStatus
     {
         NoLiveBetting = 0,
-        Live= 1,
+        Live = 1,
         GoingLive = 2
     }
 }

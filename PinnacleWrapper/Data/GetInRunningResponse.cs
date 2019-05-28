@@ -8,10 +8,10 @@ namespace PinnacleWrapper.Data
         [JsonProperty(PropertyName = "elapsed")]
         public int Elapsed;
 
-        [JsonProperty(PropertyName = "state")]
+        [JsonProperty(PropertyName = "state")] 
         public InRunningState State;
 
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "id")] 
         public int Id;
     }
 }

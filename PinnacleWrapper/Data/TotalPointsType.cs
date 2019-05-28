@@ -10,10 +10,10 @@ namespace PinnacleWrapper.Data
         [JsonProperty(PropertyName = "points")]
         public decimal Points { get; set; }
 
-        [JsonProperty(PropertyName = "over")]
+        [JsonProperty(PropertyName = "over")] 
         public decimal Over { get; set; }
 
-        [JsonProperty(PropertyName = "under")]
+        [JsonProperty(PropertyName = "under")] 
         public decimal Under { get; set; }
     }
 }

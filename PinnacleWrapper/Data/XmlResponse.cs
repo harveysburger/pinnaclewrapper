@@ -7,20 +7,15 @@ namespace PinnacleWrapper.Data
     [XmlRoot("rsp")]
     public abstract class XmlResponse
     {
-        [XmlAttribute("status")]
+        [XmlAttribute("status")] 
         public string Status { get; set; }
 
         [XmlIgnore]
-        public bool IsValid
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(Status)
-                    && Status.Equals("ok", StringComparison.OrdinalIgnoreCase);
-            }
-        }
+        public bool IsValid =>
+            !string.IsNullOrWhiteSpace(Status)
+            && Status.Equals("ok", StringComparison.OrdinalIgnoreCase);
 
-        [XmlElement("err")]
+        [XmlElement("err")] 
         public ResponseError Error { get; set; }
     }
 }

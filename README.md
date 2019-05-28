@@ -6,13 +6,15 @@ A complete API client that builds on the [PinnacleSports API Documentation](http
 
 2.1
 - New constructor that accepts an HttpClient. 
-- PinnacleClient.GetHttpClientInstance can be used to instantiate an httpclient necessary headers for Pinnacle's Api and option to enable GZIP
-
+- HttpClientFactory.GetNewInstance can be used to instantiate an httpclient with necessary headers for Pinnacle's Api and option to enable GZIP
+- Fixed bug that was causing all limits returned by GetOdds to be in USD, regardless of the currency provided
+- Breaking changes : PlaceBetResponse.UniquerequestId renamed PlaceBetResponse.UniqueRequestId
+- Breaking changes : Currency.rate renamed Currency.rate
 
 2.0
 - First version published on nuget.org
-- Library now targeting .netstandard 2.0 so should work from both .Net Framework 4.7.2 and .Net Core 2.2
-- You can override the default api version, v1, for the Fixtures and Odds API
+- Library now targeting .netstandard 2.0 so should work from both .Net Framework 4.7.2 and .Net Core 2.2 projects
+- You can override the default version, v1, for the Fixtures and Odds requests
 - PinnacleClient constructor now has an optional baseUrl parameter, default value `https://api.pinnacle.com`
 - GetFeed functionalities removed as they are deprecated by Pinnacle, use GetFixtures and GetOdds instead. If you need GetFeed revert to v1.0 of this library. 
 
@@ -29,7 +31,7 @@ These references are available via NuGet.
 Here's an example of getting all lines for upcoming Tennis matches (across all leagues):
 
 ```
-var httpClient = PinnacleClient.GetHttpClientInstance("username", "password");
+var httpClient = HttpClientFactory.GetNewInstance("username", "password");
 
 var api = new PinnacleClient("AUD", OddsFormat.DECIMAL, httpClient);
 

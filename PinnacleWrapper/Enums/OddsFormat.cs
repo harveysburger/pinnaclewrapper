@@ -10,7 +10,6 @@ namespace PinnacleWrapper.Enums
         DECIMAL,
         HONGKONG,
         INDONESIAN,
-        MALAY,
-        Fraction
+        MALAY
     }
 }

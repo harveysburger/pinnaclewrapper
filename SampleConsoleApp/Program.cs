@@ -9,13 +9,12 @@ using PinnacleWrapper.Data;
 
 namespace SampleConsoleApp
 {
-    
-    class Program
+    internal class Program
     {
-        private static readonly NLog.ILogger Logger = NLog.LogManager.GetCurrentClassLogger(); 
-        private const int SampleSportId = 33;
+        private static readonly NLog.ILogger Logger = NLog.LogManager.GetCurrentClassLogger();
+        private const int SampleSportId = 4;
 
-        static async Task Main(string[] args)
+        private static async Task Main(string[] args)
         {
             Logger.Info("Starting...");
 
@@ -23,13 +22,14 @@ namespace SampleConsoleApp
             {
                 AppConfig config;
 
-                using (StreamReader r = new StreamReader("appsettings.json"))
+                using (var r = new StreamReader("appsettings.json"))
                 {
-                    string json = r.ReadToEnd();
+                    var json = r.ReadToEnd();
                     config = JsonConvert.DeserializeObject<AppConfig>(json);
                 }
 
-                using (var httpClient = PinnacleClient.GetHttpClientInstance(config.Username, config.Password, true, config.BaseUrl))
+                using (var httpClient =
+                    HttpClientFactory.GetNewInstance(config.Username, config.Password, true, config.BaseUrl))
                 {
                     var api = new PinnacleClient(config.Currency, config.OddsFormat, httpClient);
 
@@ -38,7 +38,8 @@ namespace SampleConsoleApp
 
                     var fixtures = await api.GetFixtures(new GetFixturesRequest(SampleSportId, lastFixture));
 
-                    var lines = await api.GetOdds(new GetOddsRequest(fixtures.SportId, fixtures.Leagues.Select(i => i.Id).ToList(), lastLine, false));
+                    var lines = await api.GetOdds(new GetOddsRequest(fixtures.SportId,
+                        fixtures.Leagues.Select(i => i.Id).ToList(), lastLine, false));
 
                     var leagues = await api.GetLeagues(SampleSportId);
 
@@ -56,36 +57,26 @@ namespace SampleConsoleApp
             {
                 Console.WriteLine(e);
                 Logger.Error(e, "Exception in Task Run.");
-            } 
-            
+            }
+
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
         }
 
-        private static void SaveResultsToOutputFolder(GetFixturesResponse fixtures, GetOddsResponse lines, List<League> leagues)
+        private static void SaveResultsToOutputFolder(GetFixturesResponse fixtures, GetOddsResponse lines,
+            List<League> leagues)
         {
             CleanOutputFolder();
 
             foreach (var league in fixtures.Leagues)
-            {
-                foreach (var fixture in league.Events)
-                {
-                    FlushToFile(@"Output\Fixtures.json", JsonConvert.SerializeObject(fixture));
-                }
-            }
+            foreach (var fixture in league.Events)
+                FlushToFile(@"Output\Fixtures.json", JsonConvert.SerializeObject(fixture));
 
             foreach (var league in lines.Leagues)
-            {
-                foreach (var line in league.Events.Where(e => e.Periods.Any()))
-                {
-                    FlushToFile(@"Output\Lines.json", JsonConvert.SerializeObject(line));
-                }
-            }
+            foreach (var line in league.Events.Where(e => e.Periods.Any()))
+                FlushToFile(@"Output\Lines.json", JsonConvert.SerializeObject(line));
 
-            foreach (var league in leagues)
-            {
-                FlushToFile(@"Output\Leagues.json", JsonConvert.SerializeObject(league));
-            }
+            foreach (var league in leagues) FlushToFile(@"Output\Leagues.json", JsonConvert.SerializeObject(league));
 
             Logger.Info("Results saved in \\Output\\");
         }
@@ -95,10 +86,7 @@ namespace SampleConsoleApp
             if (!Directory.Exists(@"Output"))
                 Directory.CreateDirectory(@"Output");
 
-            foreach (var file in Directory.GetFiles(@"Output\"))
-            {
-                File.Delete(file);
-            }
+            foreach (var file in Directory.GetFiles(@"Output\")) File.Delete(file);
         }
 
         private static void FlushToFile(string fileName, string content, bool addLineBreak = true)

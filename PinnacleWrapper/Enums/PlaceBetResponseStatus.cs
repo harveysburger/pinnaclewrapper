@@ -7,7 +7,7 @@ namespace PinnacleWrapper.Enums
     public enum PlaceBetResponseStatus
     {
         ACCEPTED,
-        PENDING_ACCEPTANCE,      // live bets in the danger zone
+        PENDING_ACCEPTANCE, // live bets in the danger zone
         PROCESSED_WITH_ERROR
     }
 }

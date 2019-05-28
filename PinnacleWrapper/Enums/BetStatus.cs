@@ -6,12 +6,12 @@ namespace PinnacleWrapper.Enums
     [JsonConverter(typeof(StringEnumConverter))]
     public enum BetStatus
     {
-        Accepted, 
-        PendingAcceptance, 
-        Rejected, 
-        Refunded, 
-        Cancelled, 
-        Lose, 
+        Accepted,
+        PendingAcceptance,
+        Rejected,
+        Refunded,
+        Cancelled,
+        Lose,
         Won
     }
 }

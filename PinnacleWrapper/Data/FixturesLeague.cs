@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 
 namespace PinnacleWrapper.Data
 {
-    public class GetOddsLeague
+    public class FixturesLeague
     {
         [JsonProperty(PropertyName = "id")] 
-        public int Id { get; set; }
+        public int Id;
 
         [JsonProperty(PropertyName = "events")]
-        public List<GetOddsEvent> Events { get; set; }
+        public List<FixturesEvent> Events;
     }
 }

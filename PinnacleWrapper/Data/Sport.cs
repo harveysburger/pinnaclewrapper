@@ -7,7 +7,7 @@ namespace PinnacleWrapper.Data
         [JsonProperty(PropertyName = "id")]
         public int Id;
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "name")] 
         public string Name;
 
         [JsonProperty(PropertyName = "hasOfferings")]

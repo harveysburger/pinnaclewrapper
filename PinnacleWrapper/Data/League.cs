@@ -5,10 +5,10 @@ namespace PinnacleWrapper.Data
 {
     public class League
     {
-        [JsonProperty(PropertyName = "id")]
+        [JsonProperty(PropertyName = "id")] 
         public int Id;
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "name")] 
         public string Name;
 
         [JsonProperty(PropertyName = "homeTeamType")]

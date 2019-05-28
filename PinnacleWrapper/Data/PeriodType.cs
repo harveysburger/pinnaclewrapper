@@ -24,8 +24,8 @@ namespace PinnacleWrapper.Data
         [JsonProperty(PropertyName = "moneyLine")]
         public MoneyLineType MoneyLine { get; set; }
 
-        [JsonProperty(PropertyName = "teamTotals")]
-        public List<TeamTotalPointsType> TeamTotals { get; set; }
+        [JsonProperty(PropertyName = "teamTotal")]
+        public TeamTotalType TeamTotals { get; set; }
 
         [JsonProperty(PropertyName = "maxSpread")]
         public decimal MaxSpread { get; set; }

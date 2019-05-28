@@ -4,13 +4,13 @@ namespace PinnacleWrapper.Data
 {
     public class Currency
     {
-        [JsonProperty(PropertyName = "code")]
+        [JsonProperty(PropertyName = "code")] 
         public string Code;
 
-        [JsonProperty(PropertyName = "name")]
+        [JsonProperty(PropertyName = "name")] 
         public string Name;
 
-        [JsonProperty(PropertyName = "rate")]
-        public decimal rate;
+        [JsonProperty(PropertyName = "rate")] 
+        public decimal Rate;
     }
 }

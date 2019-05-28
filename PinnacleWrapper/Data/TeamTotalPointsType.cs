@@ -4,10 +4,13 @@ namespace PinnacleWrapper.Data
 {
     public class TeamTotalPointsType
     {
-        [JsonProperty(PropertyName = "away")]
-        public decimal Away { get; set; }
+        [JsonProperty(PropertyName = "points")]
+        public decimal Points { get; set; }
 
-        [JsonProperty(PropertyName = "home")]
-        public decimal Home { get; set; }
+        [JsonProperty(PropertyName = "over")]
+        public decimal Over { get; set; }
+
+        [JsonProperty(PropertyName = "under")]
+        public decimal Under { get; set; }
     }
 }
