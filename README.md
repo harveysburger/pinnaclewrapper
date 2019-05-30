@@ -5,9 +5,10 @@ A complete API client that builds on the [PinnacleSports API Documentation](http
 **Update**
 
 2.1
-- New constructor that accepts an HttpClient. 
-- HttpClientFactory.GetNewInstance can be used to instantiate an httpclient with necessary headers for Pinnacle's Api and option to enable GZIP
-- Fixed bug that was causing all limits returned by GetOdds to be in USD, regardless of the currency provided
+- Feature : New constructor that accepts an HttpClient
+- Feature : HttpClientFactory.GetNewInstance can be used to instantiate an HttpClient with necessary headers & baseUrl for Pinnacle's Api, with GZIP option
+- Bug fix : Fixed issue that was causing all limits returned by GetOdds to be in USD regardless of the currency provided
+- Bug fix : Now correctly populates Team Totals properties from GetOdds call
 - Breaking changes : PlaceBetResponse.UniquerequestId renamed PlaceBetResponse.UniqueRequestId
 - Breaking changes : Currency.rate renamed Currency.Rate
 
