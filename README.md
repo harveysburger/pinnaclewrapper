@@ -40,7 +40,7 @@ var api = new PinnacleClient("AUD", OddsFormat.DECIMAL, httpClient);
 var fixtures = await api.GetFixtures(new GetFixturesRequest(33));
 
 // this retrieves the odds that correspond to each fixture.
-var odds = await client.GetOdds(new GetOddsRequest(33));
+var odds = await api.GetOdds(new GetOddsRequest(33));
 ```
 
 Refreshing lines:
