@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using PinnacleWrapper;
 using PinnacleWrapper.Data;
+using PinnacleWrapper.Enums;
 
 namespace SampleConsoleApp
 {
     internal class Program
     {
         private static readonly NLog.ILogger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private const int SampleSportId = 4;
+        private const int SampleSportId = 29;
 
         private static async Task Main(string[] args)
         {
@@ -22,6 +23,16 @@ namespace SampleConsoleApp
             {
                 AppConfig config;
 
+                /*
+                 add a appsettings.json file that looks like this or feed the settings in some other ways 
+                         {
+                          "Username": "username",
+                          "Password": "password",
+                          "Currency": "GBP",
+                          "OddsFormat": "DECIMAL",
+                          "BaseUrl": "https://api.pinnacle.com/"
+                        }
+                 */
                 using (var r = new StreamReader("appsettings.json"))
                 {
                     var json = r.ReadToEnd();
@@ -38,8 +49,7 @@ namespace SampleConsoleApp
 
                     var fixtures = await api.GetFixtures(new GetFixturesRequest(SampleSportId, lastFixture));
 
-                    var lines = await api.GetOdds(new GetOddsRequest(fixtures.SportId,
-                        fixtures.Leagues.Select(i => i.Id).ToList(), lastLine, false));
+                    var lines = await api.GetOdds(new GetOddsRequest(fixtures.SportId, fixtures.Leagues.Select(i => i.Id).ToList(), lastLine, false));
 
                     var leagues = await api.GetLeagues(SampleSportId);
 
@@ -48,6 +58,9 @@ namespace SampleConsoleApp
                     lastLine = lines.Last;
 
                     SaveResultsToOutputFolder(fixtures, lines, leagues);
+
+                    var betResponse = await PlaceRandomBet(lines, api);
+                    Console.WriteLine($"Status={betResponse.Status}, BetId={betResponse.BetId}, ErrorCode={betResponse.ErrorCode}, UniqueRequestId={betResponse.UniqueRequestId}");
                 }
 
                 Console.WriteLine("Done!");
@@ -61,6 +74,39 @@ namespace SampleConsoleApp
 
             Console.WriteLine("Press any key to exit.");
             Console.ReadKey();
+        }
+
+        private static async Task<PlaceBetResponse> PlaceRandomBet(GetOddsResponse lines, PinnacleClient api)
+        {
+            int fullMatchPeriodNumber = 0;
+
+            var eventsWithFullMatchMoneyLines = 
+                lines.Leagues.SelectMany(l => 
+                    l.Events.Where(e => e.Periods.Any(p =>
+                    p.Status == (int) PeriodStatus.Online && p.MoneyLine?.Home > 1.0m &&
+                    p.Number == fullMatchPeriodNumber))
+                    ).ToList();
+            
+            var randomIndex = new Random().Next(0, eventsWithFullMatchMoneyLines.Count()-1);
+
+            var randomEvent = eventsWithFullMatchMoneyLines[randomIndex];
+
+            var request = new PlaceBetRequest
+            {
+                AcceptBetterLine = true,
+                LineId = randomEvent.Periods.First(p => p.Number == fullMatchPeriodNumber).LineId,
+                PeriodNumber = fullMatchPeriodNumber,
+                TeamType = TeamType.Team1,
+                Stake = 25,
+                WinRiskType = WinRiskType.Risk,
+                OddsFormat = OddsFormat.DECIMAL,
+                SportId = SampleSportId,
+                UniqueRequestId = Guid.NewGuid(),
+                EventId =  randomEvent.Id,
+                BetType = BetType.MoneyLine,
+            };
+
+            return await api.PlaceBet(request);
         }
 
         private static void SaveResultsToOutputFolder(GetFixturesResponse fixtures, GetOddsResponse lines,
