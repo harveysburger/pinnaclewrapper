@@ -6,6 +6,7 @@ namespace PinnacleWrapper.Data
     {
         public int SportId { get; set; }
         public List<int> LeagueIds { get; set; }
+        public List<int> EventIds { get; set; }
         public long Since { get; set; }
         public bool IsLive { get; set; }
         public string ApiVersion { get; set; }
@@ -38,13 +39,16 @@ namespace PinnacleWrapper.Data
             ApiVersion = apiVersion;
         }
 
-        public GetFixturesRequest(int sportId, List<int> leagueIds, long since, bool isLive, string apiVersion = "v1")
+        public GetFixturesRequest(int sportId, List<int> leagueIds, List<int> eventIds, long since, bool isLive, string apiVersion = "v1")
         {
             SportId = sportId;
             LeagueIds = leagueIds;
+            EventIds = eventIds;
             Since = since;
             IsLive = isLive;
             ApiVersion = apiVersion;
         }
+
+     
     }
 }

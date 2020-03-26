@@ -32,5 +32,8 @@ namespace PinnacleWrapper.Data
 
         [JsonProperty(PropertyName = "parentId")]
         public long ParentId;
+
+        [JsonProperty(PropertyName = "resultingUnit")]
+        public string ResultingUnit;
     }
 }

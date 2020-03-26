@@ -26,8 +26,7 @@ namespace PinnacleWrapper
 
         public OddsFormat OddsFormat { get; }
 
-        public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat,
-            string baseAddress = DefaultBaseAddress)
+        public PinnacleClient(string clientId, string password, string currencyCode, OddsFormat oddsFormat, string baseAddress = DefaultBaseAddress)
         {
             CurrencyCode = currencyCode;
             OddsFormat = oddsFormat;
@@ -77,15 +76,15 @@ namespace PinnacleWrapper
         protected async Task<T> GetJsonAsync<T>(string requestType, params object[] values)
         {
             var response = await _httpClient.GetAsync(string.Format(requestType, values)).ConfigureAwait(false);
-
-            response.EnsureSuccessStatusCode(); // throw if web request failed
-
+           
             var json = await response.Content.ReadAsStringAsync();
 
+            response.EnsureSuccessStatusCode(); // throw if web request failed
+           
             return await Task.Factory.StartNew(() => JsonConvert.DeserializeObject<T>(json));
         }
 
-        // ToDo: replace requestData object type with "IJsonSerialisable"
+        // TODO: replace requestData object type with "IJsonSerialisable"
         protected async Task<T> PostJsonAsync<T>(string requestType, object requestData)
         {
             var requestPostData = JsonConvert.SerializeObject(requestData);
@@ -203,13 +202,15 @@ namespace PinnacleWrapper
             if (request.LeagueIds != null && request.LeagueIds.Any())
                 sb.Append($"&leagueIds={string.Join(",", request.LeagueIds)}");
 
+            if (request.EventIds != null && request.EventIds.Any())
+                sb.Append($"&eventIds={string.Join(",", request.EventIds)}");
+
             if (request.Since > 0)
                 sb.Append($"&since={request.Since}");
 
             if (request.IsLive)
                 sb.Append($"&IsLive={request.IsLive}");
-
-
+            
             return GetJsonAsync<GetFixturesResponse>(sb.ToString());
         }
 
@@ -222,6 +223,9 @@ namespace PinnacleWrapper
             if (request.LeagueIds != null && request.LeagueIds.Any())
                 sb.Append($"&leagueIds={string.Join(",", request.LeagueIds)}");
 
+            if (request.EventIds != null && request.EventIds.Any())
+                sb.Append($"&eventIds={string.Join(",", request.EventIds)}");
+
             if (request.Since > 0)
                 sb.Append($"&since={request.Since}");
 
@@ -229,8 +233,7 @@ namespace PinnacleWrapper
                 sb.Append($"&IsLive={request.IsLive}");
 
             sb.Append($"&oddsFormat={OddsFormat}");
-            sb.Append(
-                $"&toCurrencyCode={CurrencyCode}");
+            sb.Append($"&toCurrencyCode={CurrencyCode}");
 
             return GetJsonAsync<GetOddsResponse>(sb.ToString());
         }
