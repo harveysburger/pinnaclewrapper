@@ -17,17 +17,17 @@ namespace PinnacleWrapper
         }
 
         public static HttpClient GetNewInstance(string clientId, string password, bool gzipCompression = true,
-            string baseAddress = PinnacleClient.DefaultBaseAddress)
+            string baseAddress = PinnacleClient.DefaultBaseAddress, WebProxy proxy = null)
         {
-            HttpClient httpClient;
+            var handler = new HttpClientHandler();
 
             if (gzipCompression)
-                httpClient =
-                    new HttpClient(
-                        new HttpClientHandler()
-                            {AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate}, true);
-            else
-                httpClient = new HttpClient();
+                handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            if (proxy!=null) 
+                handler.Proxy = proxy;
+
+            var httpClient = new HttpClient(handler,true);
 
             return GetNewInstance(clientId, password, baseAddress, httpClient);
         }
