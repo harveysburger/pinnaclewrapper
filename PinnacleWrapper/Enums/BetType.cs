@@ -7,8 +7,8 @@ namespace PinnacleWrapper.Enums
     public enum BetType
     {
         Spread,
-        MoneyLine,
-        TotalPoints,
-        TeamTotalPoints
+        Moneyline,
+        Total_Points,
+        Team_Total_Points
     }
 }

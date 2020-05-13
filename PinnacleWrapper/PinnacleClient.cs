@@ -153,15 +153,15 @@ namespace PinnacleWrapper
             TeamType? team = null, SideType? side = null, decimal? handicap = null)
         {
             if (team == null)
-                if (betType == BetType.MoneyLine || betType == BetType.Spread || betType == BetType.TeamTotalPoints)
+                if (betType == BetType.Moneyline || betType == BetType.Spread || betType == BetType.Team_Total_Points)
                     throw new Exception($"TeamType is required for {betType} Bets!");
 
             if (side == null)
-                if (betType == BetType.TotalPoints || betType == BetType.TeamTotalPoints)
+                if (betType == BetType.Total_Points || betType == BetType.Team_Total_Points)
                     throw new Exception($"SideType is required for {betType} Bets!");
 
             if (handicap == null)
-                if (betType == BetType.Spread || betType == BetType.TotalPoints || betType == BetType.TeamTotalPoints)
+                if (betType == BetType.Spread || betType == BetType.Total_Points || betType == BetType.Team_Total_Points)
                     throw new Exception($"Handicap is required for {betType} Bets!");
 
             // get request uri
